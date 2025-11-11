@@ -1,6 +1,14 @@
+// src/screens/Search.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  View,  Text,  StyleSheet,  Image,  Animated,  Easing,  Dimensions,  Alert,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Animated,
+  Easing,
+  Dimensions,
+  Alert,
 } from 'react-native';
 
 const { width } = Dimensions.get('window');
@@ -11,32 +19,56 @@ const PHRASES = [
   'Explorando los mejores mercados para ti…',
 ];
 
-const TOTAL_DURATION = 9000; //9 segundos
-const INTERVAL = 3000; //3 segundos
+const TOTAL_DURATION = 9000;
+const INTERVAL = 3000;
 
 const Search: React.FC = () => {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
-  const progress = useRef(new Animated.Value(0)).current; //Mantener referencia estable
+  const progress = useRef(new Animated.Value(0)).current;
+  
+  // NUEVO: Animación de latido
+  const heartbeatScale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    //// Cambiar frase cada 3 segundos
+    // Frases cada 3 segundos
     const phraseInterval = setInterval(() => {
       setCurrentPhraseIndex((prev) => (prev + 1) % PHRASES.length);
     }, INTERVAL);
-    // Animar barra de progreso (9 segundos)
+
+    // Barra de progreso (9 segundos)
     Animated.timing(progress, {
       toValue: 1,
       duration: TOTAL_DURATION,
       easing: Easing.linear,
       useNativeDriver: false,
     }).start(() => {
-        //Al completar animación
       Alert.alert('Búsqueda completada', 'Tus resultados están listos.');
     });
-    // Limpiar intervalos
-    return () => clearInterval(phraseInterval);
-  }, [progress]);
-  // Convertir progreso a ancho de barra
+
+// LATIDO SUAVE (1.4 segundos por ciclo)
+    const pulse = () => {
+      Animated.sequence([
+        Animated.timing(heartbeatScale, {
+          toValue: 1.08,           // ← Solo 8% más grande
+          duration: 600,           // ← Sube lento
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(heartbeatScale, {
+          toValue: 1,
+          duration: 800,           // ← Baja más lento
+          easing: Easing.in(Easing.quad),
+          useNativeDriver: true,
+        }),
+      ]).start(() => pulse());
+    };
+    pulse();
+
+    return () => {
+      clearInterval(phraseInterval);
+    };
+  }, [progress, heartbeatScale]);
+
   const progressWidth = progress.interpolate({
     inputRange: [0, 1],
     outputRange: [0, width - 80],
@@ -44,19 +76,24 @@ const Search: React.FC = () => {
 
   return (
     <View style={styles.container}>
-         {/* Imagen central */}
-      <Image
+      {/* IMAGEN CON LATIDO */}
+      <Animated.Image
         source={require('../assets/Busqueda1.png')}
-        style={styles.image}
+        style={[
+          styles.image,
+          { transform: [{ scale: heartbeatScale }] }, // ← EFECTO
+        ]}
         resizeMode="contain"
       />
-      {/* Texto dinámico */}
+
       <Text style={styles.phraseText}>
         {PHRASES[currentPhraseIndex]}
       </Text>
-      {/* Barra de progreso */}
+
       <View style={styles.progressContainer}>
-        <Animated.View style={[styles.progressBar, { width: progressWidth }]} />
+        <Animated.View
+          style={[styles.progressBar, { width: progressWidth }]}
+        />
       </View>
     </View>
   );
