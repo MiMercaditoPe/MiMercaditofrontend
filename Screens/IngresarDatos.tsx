@@ -75,7 +75,7 @@ const styleSheet = StyleSheet.create({
   },
 });
 
-export default function ingresarD() {
+export default function IngresarD() {
   // Estados
   const [name, setName] = useState('');
   const [familyMembers, setFamilyMembers] = useState('');
@@ -118,7 +118,7 @@ export default function ingresarD() {
 
   return (
     <View style={styleSheet.container}>
-      <Image source={require('./assets/MMP.png')} style={styleSheet.logo} />
+      <Image source={require('../assets/MMP.png')} style={styleSheet.logo} />
       <Text style={styleSheet.title}>Ingresa tus datos</Text>
 
       <View style={styleSheet.form}>

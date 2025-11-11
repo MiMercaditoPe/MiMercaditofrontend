@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  Alert,
+  View,  Text,  StyleSheet,  TextInput,  Image,  TouchableOpacity,  FlatList,  Alert,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker'; // ← NUEVO
+import { Picker } from '@react-native-picker/picker'; 
 
 interface Producto {
   id: string;
@@ -29,7 +22,7 @@ const styles = StyleSheet.create({
   input: { flex: 1, backgroundColor: '#FFFFFF', borderWidth: 3, borderColor: '#27AE60', borderRadius: 30, paddingHorizontal: 16, paddingVertical: 14, fontSize: 18, color: '#2C3E50', textAlign: 'center' },
   listaContainer: { marginTop: 40, paddingHorizontal: 24, flex: 1 },
   listaHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  listaTitle: { fontSize: 18, color: '#FFFFFF', fontWeight: '600' },
+  listaTitle: { fontSize: 26, color: '#FFFFFF', fontWeight: 'bold', },
   addButton: { backgroundColor: '#27AE60', width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
   addText: { fontSize: 28, color: '#FFFFFF', fontWeight: 'bold' },
 
@@ -126,11 +119,11 @@ const ListP: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('./assets/fondo2.png')} style={styles.ola} />
+      <Image source={require('../assets/fondo2.png')} style={styles.ola} />
       <TouchableOpacity style={styles.backButton}>
         <Text style={{ fontSize: 28, color: '#FFFFFF' }}>Back</Text>
       </TouchableOpacity>
-      <Image source={require('./assets/MMP(L).png')} style={styles.logo} />
+      <Image source={require('../assets/MMP(L).png')} style={styles.logo} />
       <Text style={styles.title}>Presupuesto</Text>
 
       <View style={styles.inputContainer}>

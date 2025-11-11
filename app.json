@@ -1,4 +1,7 @@
 {
   "name": "MiMercaditofrontend",
-  "displayName": "MiMercaditofrontend"
+  "displayName": "MiMercaditofrontend",
+  "plugins": [
+    "expo-font"
+  ]
 }
