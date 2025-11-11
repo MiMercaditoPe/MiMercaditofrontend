@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View,  Text,  StyleSheet,  Image,  Alert,  TextInput,  TouchableOpacity,} from 'react-native';
+import { View, Text, StyleSheet, Image, Alert, TextInput, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 const styleSheet = StyleSheet.create({
@@ -68,10 +68,20 @@ const styleSheet = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 10,
+  },
 });
 
 export default function App() {
-  const [ubicacion, setUbicacion] = useState('');
+  // ✅ Estados
+  const [name, setName] = useState('');
+  const [familyMembers, setFamilyMembers] = useState('');
+  const [location, setLocation] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const distritos = [
     'La Molina',
@@ -82,31 +92,59 @@ export default function App() {
     'Pueblo Libre',
   ];
 
+  // ✅ Función handleSubmit
+  const handleSubmit = async () => {
+    if (!name || !familyMembers || !location) {
+      setError('Por favor completa todos los campos');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError('');
+
+      // Aquí iría la lógica para guardar en Supabase o backend
+      console.log({ name, familyMembers, location });
+
+      Alert.alert('Datos guardados', `Bienvenido ${name} de ${location}`);
+      // router.push('/budget'); ← cuando uses navegación
+    } catch (err) {
+      console.error(err);
+      setError('Error al guardar los datos. Intenta nuevamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styleSheet.container}>
       <Image source={require('./assets/MMP.png')} style={styleSheet.logo} />
       <Text style={styleSheet.title}>Ingresa tus datos</Text>
 
-      {/* Nombre */}
       <View style={styleSheet.form}>
-        <TextInput placeholder="Nombre del jefe de familia" style={styleSheet.input} />
+        <TextInput
+          placeholder="Nombre del jefe de familia"
+          style={styleSheet.input}
+          value={name}
+          onChangeText={setName}
+        />
       </View>
 
-      {/* Número de miembros */}
       <View style={styleSheet.form}>
         <TextInput
           placeholder="Número de miembros de familia"
           style={styleSheet.input}
           keyboardType="numeric"
+          value={familyMembers}
+          onChangeText={setFamilyMembers}
         />
       </View>
 
-      {/* Ubicación con Picker */}
       <View style={styleSheet.form}>
         <View style={styleSheet.pickerContainer}>
           <Picker
-            selectedValue={ubicacion}
-            onValueChange={(itemValue) => setUbicacion(itemValue)}
+            selectedValue={location}
+            onValueChange={(itemValue) => setLocation(itemValue)}
             style={styleSheet.picker}
           >
             <Picker.Item label="Selecciona tu distrito" value="" />
@@ -117,17 +155,16 @@ export default function App() {
         </View>
       </View>
 
+      {error ? <Text style={styleSheet.errorText}>{error}</Text> : null}
+
       <TouchableOpacity
         style={styleSheet.primaryButton}
-        onPress={() => {
-          if (!ubicacion) {
-            Alert.alert('Por favor selecciona una ubicación');
-          } else {
-            Alert.alert(`Distrito seleccionado: ${ubicacion}`);
-          }
-        }}
+        onPress={handleSubmit}
+        disabled={loading}
       >
-        <Text style={styleSheet.buttonText}>Siguiente</Text>
+        <Text style={styleSheet.buttonText}>
+          {loading ? 'Guardando...' : 'Siguiente'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
