@@ -5,6 +5,7 @@ import {
 import { Picker } from '@react-native-picker/picker'; 
 import { useNavigation } from '@react-navigation/native';
 
+
 interface Producto {
   id: string;
   nombre: string;
