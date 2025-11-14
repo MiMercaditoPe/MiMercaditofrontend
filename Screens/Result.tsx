@@ -1,13 +1,7 @@
-// src/screens/Result.tsx
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Dimensions,
+import {  View,  Text,  StyleSheet,  Image,  TouchableOpacity,  Dimensions,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
@@ -30,6 +24,7 @@ const bestStore = stores.reduce((prev, current) =>
 );
 
 const Result: React.FC = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       {/* Imagen del mapa */}
@@ -69,7 +64,9 @@ const Result: React.FC = () => {
 
       {/* Botón SALIR */}
       <TouchableOpacity style={styles.exitButton}>
-        <Text style={styles.exitButtonText}>SALIR</Text>
+        <Text style={styles.exitButtonText}
+        onPress={() => navigation.navigate('IngresarDatos')}
+        >SALIR</Text>
       </TouchableOpacity>
     </View>
   );

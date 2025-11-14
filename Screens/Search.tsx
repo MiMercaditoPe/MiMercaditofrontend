@@ -1,15 +1,7 @@
-// src/screens/Search.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Animated,
-  Easing,
-  Dimensions,
-  Alert,
+import {  View,  Text,  StyleSheet,  Image,  Animated,  Easing,  Dimensions,  Alert,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
@@ -28,7 +20,7 @@ const Search: React.FC = () => {
   
   // NUEVO: Animación de latido
   const heartbeatScale = useRef(new Animated.Value(1)).current;
-
+  const navigation = useNavigation();
   useEffect(() => {
     // Frases cada 3 segundos
     const phraseInterval = setInterval(() => {
@@ -43,6 +35,7 @@ const Search: React.FC = () => {
       useNativeDriver: false,
     }).start(() => {
       Alert.alert('Búsqueda completada', 'Tus resultados están listos.');
+      navigation.navigate('Result');
     });
 
 // LATIDO SUAVE (1.4 segundos por ciclo)

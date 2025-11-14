@@ -3,6 +3,7 @@ import {
   View,  Text,  StyleSheet,  TextInput,  Image,  TouchableOpacity,  FlatList,  Alert,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; 
+import { useNavigation } from '@react-navigation/native';
 
 interface Producto {
   id: string;
@@ -13,10 +14,51 @@ interface Producto {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#E53935' },
-  ola: { position: 'absolute', top: 0, left: 0, right: 0, width: '100%', height: 200, resizeMode: 'stretch' },
-  backButton: { position: 'absolute', top: 50, left: 20, zIndex: 10 },
-  logo: { width: 800, height: 110, alignSelf: 'center', marginTop: 55, resizeMode: 'contain' },
-  title: { marginTop: 40, alignSelf: 'center', fontSize: 26, fontWeight: 'bold', color: '#FFFFFF' },
+  //Parte de arriba
+  ola: { 
+  position: 'absolute', 
+  top: 0, 
+  left: 0, 
+  right: 0, 
+  width: '100%', 
+  height: 200, 
+  resizeMode: 'stretch',
+  zIndex: 1, // Asegura que esté detrás del botón y logo
+},
+backButton: {
+  position: 'absolute',
+  top: 50,
+  left: 20,
+  zIndex: 10, // Más alto que la ola
+  backgroundColor: '#FFFFFF',
+  width: 44,
+  height: 44,
+  borderRadius: 22,
+  justifyContent: 'center',
+  alignItems: 'center',
+  elevation: 4,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.2,
+  shadowRadius: 4,
+},
+backArrow: {
+  fontSize: 24,
+  fontWeight: 'bold',
+  color: '#F3902B',
+},
+logo: { 
+  width: 800, 
+  height: 110, 
+  alignSelf: 'center', 
+  marginTop: 55, 
+  resizeMode: 'contain',
+  position: 'absolute',   // ¡Importante!
+  top: 0,                 // Alineado con la ola
+  zIndex: 5,              // Entre ola (1) y botón (10)
+},
+  //Parte de datos
+  title: { marginTop: 210, alignSelf: 'center', fontSize: 26, fontWeight: 'bold', color: '#FFFFFF' },
   inputContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 20, paddingHorizontal: 40 },
   prefix: { fontSize: 22, color: '#F5E6CC', marginRight: 10, fontWeight: 'bold' },
   input: { flex: 1, backgroundColor: '#FFFFFF', borderWidth: 3, borderColor: '#27AE60', borderRadius: 30, paddingHorizontal: 16, paddingVertical: 14, fontSize: 18, color: '#2C3E50', textAlign: 'center' },
@@ -56,6 +98,8 @@ const styles = StyleSheet.create({
 
   calcularButton: { backgroundColor: '#F3902B', marginHorizontal: 40, marginVertical: 30, paddingVertical: 16, borderRadius: 30, alignItems: 'center' },
   calcularText: { color: '#FFFFFF', fontSize: 18, fontWeight: 'bold' },
+
+
 });
 
 const ListP: React.FC = () => {
@@ -117,13 +161,18 @@ const ListP: React.FC = () => {
     </View>
   );
 
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <Image source={require('../assets/fondo2.png')} style={styles.ola} />
-      <TouchableOpacity style={styles.backButton}>
-        <Text style={{ fontSize: 28, color: '#FFFFFF' }}>Back</Text>
-      </TouchableOpacity>
+      
       <Image source={require('../assets/MMP(L).png')} style={styles.logo} />
+      <TouchableOpacity 
+      style={styles.backButton}
+      onPress={() => navigation.goBack()}><Text style={styles.backArrow}>❮</Text>
+
+</TouchableOpacity>
       <Text style={styles.title}>Presupuesto</Text>
 
       <View style={styles.inputContainer}>
@@ -190,7 +239,22 @@ const ListP: React.FC = () => {
         />
       </View>
 
-      <TouchableOpacity style={styles.calcularButton}>
+      <TouchableOpacity 
+       style={styles.calcularButton}
+  onPress={() => {
+    if (!presupuesto.trim()) {
+      Alert.alert("Error", "Debes ingresar un presupuesto antes de continuar.");
+      return;
+    }
+
+    if (productos.length === 0) {
+      Alert.alert("Error", "Agrega al menos un producto para continuar.");
+      return;
+    }
+
+    navigation.navigate("Search");
+  }}
+      >
         <Text style={styles.calcularText}>Calcular</Text>
       </TouchableOpacity>
     </View>

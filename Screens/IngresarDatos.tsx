@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, Alert, TextInput, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type RootStackParamList = {
+  IngresarDatos: undefined;
+  Lista: undefined;
+  Search: undefined;
+  Result: undefined;
+};
+type IngresarDatosNavProp = NativeStackNavigationProp<RootStackParamList, 'IngresarDatos'>;
 
 const styleSheet = StyleSheet.create({
   container: {
@@ -106,7 +116,7 @@ export default function IngresarD() {
       // Aquí iría la lógica para guardar en Supabase o backend
       console.log({ name, familyMembers, location });
 
-      Alert.alert('Datos guardados', `Bienvenido ${name} de ${location}`);
+      Alert.alert('Datos guardados', `Bienvenid@ ${name} de ${location}`);
       // router.push('/budget'); ← cuando uses navegación
     } catch (err) {
       console.error(err);
@@ -116,6 +126,8 @@ export default function IngresarD() {
     }
   };
 
+  const navigation = useNavigation<IngresarDatosNavProp>();
+  
   return (
     <View style={styleSheet.container}>
       <Image source={require('../assets/MMP.png')} style={styleSheet.logo} />
@@ -158,9 +170,16 @@ export default function IngresarD() {
       {error ? <Text style={styleSheet.errorText}>{error}</Text> : null}
 
       <TouchableOpacity
-        style={styleSheet.primaryButton}
-        onPress={handleSubmit}
-        disabled={loading}
+         style={styleSheet.primaryButton}
+          onPress={() => {
+          if (!name || !familyMembers || !location) {
+          setError("Por favor completa todos los campos");
+          return;
+             }
+    handleSubmit();
+    navigation.navigate("Lista");
+  }}
+  disabled={loading}
       >
         <Text style={styleSheet.buttonText}>
           {loading ? 'Guardando...' : 'Siguiente'}
