@@ -13,7 +13,7 @@ interface Store {
 }
 
 const stores: Store[] = [
-  { id: 'A', name: 'Tienda A', price: 150, district: 'Surco' },
+  { id: 'A', name: 'Tienda A', price: 100, district: 'Surco' },
   { id: 'B', name: 'Tienda B', price: 120, district: 'Surco' },
   { id: 'C', name: 'Tienda C', price: 110, district: 'Surco' },
 ];
