@@ -70,9 +70,9 @@ logo: {
   addText: { fontSize: 28, color: '#FFFFFF', fontWeight: 'bold' },
 
   // 3 CAMPOS DE ENTRADA
-  inputRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 16, gap: 8 },
+  inputRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 16, gap: 10 },
   inputField: { flex: 1, backgroundColor: '#FFFFFF', borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10, fontSize: 16, borderWidth: 1, borderColor: '#DDD' },
-  cantidadInput: { width: 80, textAlign: 'center' },
+  cantidadInput: { width: 50, textAlign: 'center' },
 
   // NUEVO: ESTILO DEL PICKER
   pickerContainer: {
@@ -107,7 +107,7 @@ const ListP: React.FC = () => {
   const [presupuesto, setPresupuesto] = useState<string>('');
   const [productos, setProductos] = useState<Producto[]>([]);
   const [nuevoNombre, setNuevoNombre] = useState('');
-  const [nuevaCantidad, setNuevaCantidad] = useState('');
+  {/*const [nuevaCantidad, setNuevaCantidad] = useState('');*/}
   const [nuevaPrioridad, setNuevaPrioridad] = useState<'alta' | 'media' | 'baja'>('media');
 
   const handlePresupuestoChange = (text: string) => {
@@ -123,21 +123,21 @@ const ListP: React.FC = () => {
       Alert.alert('Error', 'El nombre del producto es obligatorio');
       return;
     }
-    if (!nuevaCantidad.trim() || isNaN(Number(nuevaCantidad))) {
+    /*if (!nuevaCantidad.trim() || isNaN(Number(nuevaCantidad))) {
       Alert.alert('Error', 'La cantidad debe ser un número');
       return;
-    }
+    }*/
 
     const nuevo: Producto = {
       id: Date.now().toString(),
       nombre: nuevoNombre.trim(),
-      cantidad: nuevaCantidad.trim(),
+      /*cantidad: nuevaCantidad.trim(),*/
       prioridad: nuevaPrioridad,
     };
 
     setProductos(prev => [...prev, nuevo]);
     setNuevoNombre('');
-    setNuevaCantidad('');
+    /*setNuevaCantidad('');*/
     setNuevaPrioridad('media');
   };
 
@@ -148,10 +148,10 @@ const ListP: React.FC = () => {
   const renderProducto = ({ item }: { item: Producto }) => (
     <View style={styles.productoItem}>
       <View style={styles.productoInfo}>
-        <Text style={styles.productoNombre}>Producto: {item.nombre}</Text>
-        <Text style={styles.productoDetalle}>
+        <Text style={styles.productoNombre}>Producto(Kg): {item.nombre}</Text>
+       {/* <Text style={styles.productoDetalle}>
           Cantidad: {item.cantidad}, Prioridad: {item.prioridad}
-        </Text>
+        </Text>*/}
       </View>
       <Text style={styles.prioridadText}>
         {item.prioridad === 'alta' ? '★' : item.prioridad === 'media' ? '⭑' : '☆'}
@@ -199,18 +199,18 @@ const ListP: React.FC = () => {
         {/* 3 CAMPOS: Producto, Cantidad, Prioridad (Picker) */}
         <View style={styles.inputRow}>
           <TextInput
-            placeholder="Producto"
+            placeholder="Producto(kg/g/L)"
             style={styles.inputField}
             value={nuevoNombre}
             onChangeText={setNuevoNombre}
           />
-          <TextInput
+          {/*<TextInput
             placeholder="Cant."
             style={[styles.inputField, styles.cantidadInput]}
             value={nuevaCantidad}
             onChangeText={setNuevaCantidad}
             keyboardType="numeric"
-          />
+          />*/}
           {/* PICKER DE PRIORIDAD */}
           <View style={styles.pickerContainer}>
             <Picker
@@ -219,6 +219,7 @@ const ListP: React.FC = () => {
               style={styles.picker}
               dropdownIconColor="#27AE60"
             >
+              <Picker.Item label="Selecciona tu prioridad" value="" />
               <Picker.Item label="Alta" value="alta" />
               <Picker.Item label="Media" value="media" />
               <Picker.Item label="Baja" value="baja" />
