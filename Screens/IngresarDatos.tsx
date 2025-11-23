@@ -1,8 +1,16 @@
-// --- IngresarDatos.tsx ---
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, Alert, TextInput, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type RootStackParamList = {
+  IngresarDatos: undefined;
+  Lista: undefined;
+  Search: undefined;
+  Result: undefined;
+};
+type IngresarDatosNavProp = NativeStackNavigationProp<RootStackParamList, 'IngresarDatos'>;
 
 const styleSheet = StyleSheet.create({
   container: {
@@ -78,8 +86,7 @@ const styleSheet = StyleSheet.create({
 });
 
 export default function IngresarD() {
-  const navigation = useNavigation();
-
+  // Estados
   const [name, setName] = useState('');
   const [familyMembers, setFamilyMembers] = useState('');
   const [location, setLocation] = useState('');
@@ -95,6 +102,7 @@ export default function IngresarD() {
     'Pueblo Libre',
   ];
 
+  // Función handleSubmit
   const handleSubmit = async () => {
     if (!name || !familyMembers || !location) {
       setError('Por favor completa todos los campos');
@@ -105,10 +113,11 @@ export default function IngresarD() {
       setLoading(true);
       setError('');
 
-      Alert.alert('Datos guardados', `Bienvenido ${name} de ${location}`);
+      // Aquí iría la lógica para guardar en Supabase o backend
+      console.log({ name, familyMembers, location });
 
-      navigation.navigate("ListP");
-
+      Alert.alert('Datos guardados', `Bienvenid@ ${name} de ${location}`);
+      // router.push('/budget'); ← cuando uses navegación
     } catch (err) {
       console.error(err);
       setError('Error al guardar los datos. Intenta nuevamente.');
@@ -117,6 +126,8 @@ export default function IngresarD() {
     }
   };
 
+  const navigation = useNavigation<IngresarDatosNavProp>();
+  
   return (
     <View style={styleSheet.container}>
       <Image source={require('../assets/MMP.png')} style={styleSheet.logo} />
@@ -159,9 +170,16 @@ export default function IngresarD() {
       {error ? <Text style={styleSheet.errorText}>{error}</Text> : null}
 
       <TouchableOpacity
-        style={styleSheet.primaryButton}
-        onPress={handleSubmit}
-        disabled={loading}
+         style={styleSheet.primaryButton}
+          onPress={() => {
+          if (!name || !familyMembers || !location) {
+          setError("Por favor completa todos los campos");
+          return;
+             }
+    handleSubmit();
+    navigation.navigate("ListP");
+  }}
+  disabled={loading}
       >
         <Text style={styleSheet.buttonText}>
           {loading ? 'Guardando...' : 'Siguiente'}
