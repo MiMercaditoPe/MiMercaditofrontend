@@ -65,7 +65,7 @@ const Result: React.FC = () => {
       {/* Botón SALIR */}
       <TouchableOpacity style={styles.exitButton}>
         <Text style={styles.exitButtonText}
-        onPress={() => navigation.navigate('IngresarDatos')}
+        onPress={() => navigation.navigate('IngresarD')}
         >SALIR</Text>
       </TouchableOpacity>
     </View>
