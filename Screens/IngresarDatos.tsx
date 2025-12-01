@@ -93,13 +93,10 @@ export default function IngresarD() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const distritos = [
-    'La Molina',
-    'Surco',
-    'Miraflores',
-    'San Isidro',
-    'Barranco',
-    'Pueblo Libre',
+ const distritos = [
+    "Miraflores", "Barranco", "Surco", "Santiago de Surco", "San Isidro", "San Borja", "Lince",
+    "Jesús María", "San Miguel", "Callao", "Chorrillos", "Surquillo", "La Molina", "Pueblo Libre",
+    "San Martín de Porres", "Comas", "Villa El Salvador", "San Juan de Lurigancho"
   ];
 
   // Función handleSubmit

@@ -13,9 +13,9 @@ interface Store {
 }
 
 const stores: Store[] = [
-  { id: 'A', name: 'Tienda A', price: 80, district: 'Surco' },
-  { id: 'B', name: 'Tienda B', price: 120, district: 'Surco' },
-  { id: 'C', name: 'Tienda C', price: 90, district: 'Surco' },
+  { id: 'A', name: 'Plaza Vea Miraflores', price: 52.30, district: 'Miraflores' },
+  { id: 'B', name: 'Bodega La Esquina', price: 27.20, district: 'Miraflores' },
+  { id: 'C', name: 'Wong San Isidro', price: 42, district: 'San Isidro' },
 ];
 
 // Encontrar la tienda con mejor precio
@@ -59,7 +59,7 @@ const Result: React.FC = () => {
 
       {/* Recomendación */}
       <Text style={styles.recommendation}>
-        Se recomienda comprar en {bestStore.name}
+        La tienda mas cercana es {bestStore.name}
       </Text>
 
       {/* Botón SALIR */}
