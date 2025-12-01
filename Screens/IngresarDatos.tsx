@@ -1,18 +1,10 @@
+// Screens/IngresarDatos.tsx
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, Alert, TextInput, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-type RootStackParamList = {
-  IngresarDatos: undefined;
-  Lista: undefined;
-  Search: undefined;
-  Result: undefined;
-};
-type IngresarDatosNavProp = NativeStackNavigationProp<RootStackParamList, 'IngresarDatos'>;
-
-const styleSheet = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -39,6 +31,9 @@ const styleSheet = StyleSheet.create({
     marginVertical: 8,
   },
   input: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '80%',
     backgroundColor: '#FFFFFF',
     borderWidth: 2,
@@ -51,6 +46,7 @@ const styleSheet = StyleSheet.create({
     marginBottom: 5,
   },
   pickerContainer: {
+    alignSelf: 'center',
     width: '80%',
     backgroundColor: '#FFFFFF',
     borderWidth: 2,
@@ -84,119 +80,47 @@ const styleSheet = StyleSheet.create({
     marginTop: 10,
   },
 });
-
 export default function IngresarD() {
-  // Estados
   const [name, setName] = useState('');
   const [familyMembers, setFamilyMembers] = useState('');
   const [location, setLocation] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation<any>();
 
   const distritos = [
-    'Barranco',
-    'Callao',
-    'Chorrillos',
-    'Comas',
-    'Jesús María',
-    'La Molina',
-    'Lince',
-    'Miraflores',
-    'Pueblo Libre',
-    'San Borja',
-    'San Isidro',
-    'San Juan de Lurigancho',
-    'San Martín de Porres',
-    'San Miguel',
-    'San Martín de Porres',                    // San Martín de Porres
-    'Surco',
-    'Santiago de Surco',      // aparece tanto como "Surco" como "Santiago de Surco"
-    'Surquillo',
-    'Villa El Salvador'
+    "Miraflores", "Barranco", "Surco", "Santiago de Surco", "San Isidro", "San Borja", "Lince",
+    "Jesús María", "San Miguel", "Callao", "Chorrillos", "Surquillo", "La Molina", "Pueblo Libre",
+    "San Martín de Porres", "Comas", "Villa El Salvador", "San Juan de Lurigancho"
   ];
 
-  // Función handleSubmit
-  const handleSubmit = async () => {
+  const handleNext = () => {
     if (!name || !familyMembers || !location) {
-      setError('Por favor completa todos los campos');
+      setError("Completa todos los campos");
       return;
     }
-
-    try {
-      setLoading(true);
-      setError('');
-
-      // Aquí iría la lógica para guardar en Supabase o backend
-      console.log({ name, familyMembers, location });
-
-      Alert.alert('Datos guardados', `Bienvenid@ ${name} de ${location}`);
-      // router.push('/budget'); ← cuando uses navegación
-    } catch (err) {
-      console.error(err);
-      setError('Error al guardar los datos. Intenta nuevamente.');
-    } finally {
-      setLoading(false);
-    }
+    // Guardamos distrito globalmente (usaremos en Lista y Result)
+    navigation.navigate('ListP', { userDistrict: location });
   };
 
-  const navigation = useNavigation<IngresarDatosNavProp>();
-  
   return (
-    <View style={styleSheet.container}>
-      <Image source={require('../assets/MMP.png')} style={styleSheet.logo} />
-      <Text style={styleSheet.title}>Ingresa tus datos</Text>
+    <View style={styles.container}>
+      <Image source={require('../assets/MMP.png')} style={styles.logo} />
+      <Text style={styles.title}>Ingresa tus datos</Text>
 
-      <View style={styleSheet.form}>
-        <TextInput
-          placeholder="Nombre del jefe de familia"
-          style={styleSheet.input}
-          value={name}
-          onChangeText={setName}
-        />
+      <TextInput placeholder="Nombre del jefe de familia" style={styles.input} value={name} onChangeText={setName} />
+      <TextInput placeholder="Número de miembros" style={styles.input} value={familyMembers} onChangeText={setFamilyMembers} keyboardType="numeric" />
+
+      <View style={styles.pickerContainer}>
+        <Picker selectedValue={location} onValueChange={setLocation}>
+          <Picker.Item label="Selecciona tu distrito" value="" />
+          {distritos.map(d => <Picker.Item key={d} label={d} value={d} />)}
+        </Picker>
       </View>
 
-      <View style={styleSheet.form}>
-        <TextInput
-          placeholder="Número de miembros de familia"
-          style={styleSheet.input}
-          keyboardType="numeric"
-          value={familyMembers}
-          onChangeText={setFamilyMembers}
-        />
-      </View>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-      <View style={styleSheet.form}>
-        <View style={styleSheet.pickerContainer}>
-          <Picker
-            selectedValue={location}
-            onValueChange={(itemValue) => setLocation(itemValue)}
-            style={styleSheet.picker}
-          >
-            <Picker.Item label="Selecciona tu distrito" value="" />
-            {distritos.map((d, i) => (
-              <Picker.Item key={i} label={d} value={d} />
-            ))}
-          </Picker>
-        </View>
-      </View>
-
-      {error ? <Text style={styleSheet.errorText}>{error}</Text> : null}
-
-      <TouchableOpacity
-         style={styleSheet.primaryButton}
-          onPress={() => {
-          if (!name || !familyMembers || !location) {
-          setError("Por favor completa todos los campos");
-          return;
-             }
-    handleSubmit();
-    navigation.navigate("ListP");
-  }}
-  disabled={loading}
-      >
-        <Text style={styleSheet.buttonText}>
-          {loading ? 'Guardando...' : 'Siguiente'}
-        </Text>
+      <TouchableOpacity style={styles.primaryButton} onPress={handleNext}>
+        <Text style={styles.buttonText}>Siguiente</Text>
       </TouchableOpacity>
     </View>
   );
